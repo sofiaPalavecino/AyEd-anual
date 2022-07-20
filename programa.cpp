@@ -1,15 +1,23 @@
+// 5 partidos -> 25 candidatos cada uno
+// los votos q puso sofi
+// ordenarnlos como dijo dami
+//sistema de d'hont
+
 #include<iostream>
 #include<cmath>
 #include<fstream>
 #include<ostream>
 using namespace std;
 
+#define _TOPE_LARGO_NOMBRE 100
 #define _TOPE_CANDIDATOS 25
 #define _TOPE_LISTAS 5
 
+typedef char tNombre[_TOPE_LARGO_NOMBRE];
+
 struct lista {
     int numero;
-    tNombre nombre;
+    string nombre;
     string candidatos[_TOPE_CANDIDATOS];
 };
 
@@ -22,39 +30,48 @@ struct voto {
 };
 
 void cargarVotos();
-void cargarLista(char * nombreArchivo, tLista);
-void ordenarVotos();
+void cargarLista(tLista & listas);
+/*void ordenarVotos();
 void procesarVotos();
-void mostrarVotos();
+void mostrarVotos();*/
 
 int main(){
     tLista listas;
     
-    cargarLista("candidatos.txt", listas);
+    cargarLista(listas);
     //cargarVotos("votos.csv");
     //ordenarVotos();
     //mostrarVotos();
     //procesarVotos();
 
-    cout <<listas<<endl;
+    for (int i = 0; i < _TOPE_LISTAS; i++)
+    {
+        cout<<listas[i].numero<<endl;
+        cout<<listas[i].nombre<<endl;
+        for (int j = 0; j < _TOPE_CANDIDATOS; j++)
+        {
+            cout<<listas[i].candidatos[j]<<endl;
+        }
+        cout<<"_____________________________"<<endl;
+        
+    }
     
 }
 
-void cargarLista(char * nombreArchivo, tLista & listas) {
+void cargarLista(tLista & listas) {
 
     string nombreCandidato;
     lista lista;
-    int i = 0;
-    int j = 0;
-    ifstream fe(nombreArchivo);
+    int i,j = 0;
+    ifstream fe("candidatos.txt");
 
-    while(getline(fe, nombreCandidato)) {  
-        if(i<_TOPE_CANDIDATOS){
+    while(getline(fe, nombreCandidato)) {
+        if(i<_TOPE_CANDIDATOS-1){
             lista.candidatos[i] = nombreCandidato;
         }
         else{
             lista.numero = j+1;
-            lista.nombre = "Lista", j+1;
+            lista.nombre = "Lista " + to_string(j+1);
             listas[j] = lista;
             i = -1;
             j++;
