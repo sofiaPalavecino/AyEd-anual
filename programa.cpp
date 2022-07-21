@@ -3,102 +3,121 @@
 // ordenarnlos como dijo dami
 //sistema de d'hont
 
-#include<iostream>
-#include<cmath>
-#include<fstream>
-#include<ostream>
+#include <iostream>
+#include <cmath>
+#include <fstream>
+#include <ostream>
+#include <string>
 using namespace std;
 
-#define _TOPE_LARGO_NOMBRE 100
 #define _TOPE_CANDIDATOS 25
 #define _TOPE_LISTAS 5
-
-typedef char tNombre[_TOPE_LARGO_NOMBRE];
-
+#define _TOPE_VOTOS 300
+struct voto {
+    int numero;
+    char genero;
+    int edad;
+};
 struct lista {
     int numero;
     string nombre;
     string candidatos[_TOPE_CANDIDATOS];
 };
 
-typedef lista tLista[_TOPE_LISTAS];
+typedef lista tListas[_TOPE_LISTAS];
+typedef voto tVotos[_TOPE_VOTOS];
 
-struct voto {
-    int numero;
-    char genero;
-    int edad;
-};
-
-void cargarVotos();
-void cargarLista(tLista & listas);
+void cargarLista(tListas & listas);
+void parsear(string cadenaAParsear, voto & votoParseado);
+void cargarVotos(tVotos & votos);
 /*void ordenarVotos();
 void procesarVotos();
 void mostrarVotos();*/
 
 int main(){
-    tLista listas;
+    tListas listas;
+    tVotos votos;
     
     cargarLista(listas);
-    //cargarVotos("votos.csv");
+    cargarVotos(votos);
     //ordenarVotos();
     //mostrarVotos();
     //procesarVotos();
-
-    for (int i = 0; i < _TOPE_LISTAS; i++)
-    {
-        cout<<listas[i].numero<<endl;
-        cout<<listas[i].nombre<<endl;
-        for (int j = 0; j < _TOPE_CANDIDATOS; j++)
-        {
-            cout<<listas[i].candidatos[j]<<endl;
-        }
-        cout<<"_____________________________"<<endl;
-        
-    }
-    
 }
 
-void cargarLista(tLista & listas) {
-
+void cargarLista(tListas & listas) {
     string nombreCandidato;
     lista lista;
-    int i,j = 0;
-    ifstream fe("candidatos.txt");
+    int i = 0, j = 0;
+    ifstream archivoCandidatos("candidatos.txt");
 
-    while(getline(fe, nombreCandidato)) {
-        if(i<_TOPE_CANDIDATOS-1){
-            lista.candidatos[i] = nombreCandidato;
-        }
-        else{
+    while(getline(archivoCandidatos, nombreCandidato)) {
+        if (i == _TOPE_CANDIDATOS){
             lista.numero = j+1;
-            lista.nombre = "Lista " + to_string(j+1);
+            lista.nombre = "Lista " + to_string(lista.numero);
             listas[j] = lista;
-            i = -1;
+            i = 0;
             j++;
         }
+        lista.candidatos[i] = nombreCandidato;
         i++;
     }
-      
-    fe.close();
+
+    archivoCandidatos.close();
+
+    // for (int i = 0; i < _TOPE_LISTAS; i++)
+    // {
+
+    //     cout<<"Numero de lista: " << listas[i].numero<<endl;
+    //     cout<<"Nombre de lista: " << listas[i].nombre<<endl;
+    //     cout<<"Candidatos: "<<endl;
+    //     cout<<"______________Titulares_______________"<<endl;
+    //     for (int j = 0; j < _TOPE_CANDIDATOS; j++)
+    //     {
+    //         if(j == 13){
+    //             cout<<"______________Suplentes_______________"<<endl;
+    //         }
+    //         cout<<j + 1<<") "<<listas[i].candidatos[j]<<endl;
+
+    //     }
+    //     cout<<"______________________________________"<<endl;
+    //     cout<<endl;
+
+    // }
 }
 
-/*void  cargaVotos(char * ori) {
-  tRPersona per;
-  string cadena;
-  // Abre un entrada de entrada cadena de caracteres
-  ifstream fe(ori); 
- 
-  cout<<"Procesa personas desde el archivo de texto "<<ori<<" a "<<endl;
-  cout<<"El archivo origen es un texto que tiene nombre;edad;categoria;salario "<<endl;
-  cout<<"separado por el simbolo ; sin encabezado"<<endl;
-  cout<<"============================================================="<<endl;
-  printf("%-30s %5s %5s %5s\n", "Nombre", "Edad", "Cat.", "Salario" );
-  printf("%-30s %5s %5s %5s\n", "=============================", "====", "====", "=======" );
-  while(getline(fe, cadena)) { // detecta la marca de fin de archivo
-	  parsear(cadena, per ) ; // separa los campos, los devuelve en el registro de acuerdo al tipo de datos
+void cargarVotos(tVotos & votos) {
+    string cadena;
+    voto voto;
+    int i = 0;
+    ifstream archivoVotos("votos.txt");
 
-      printf("%-30s %5d %5s %5d\n", per.nbe, per.edad, per.categoria, per.salario );
+    while(getline(archivoVotos, cadena)) {
+        parsear(cadena, voto);
+        votos[i] = voto;
+        // cout << votos[i].numero << endl;
+        // cout << votos[i].genero << endl;
+        // cout << votos[i].edad << endl;
+        // cout <<"-----------------------"<<endl;
 
-   }
-   fe.close();
-}*/
+        i++;
+    }
+    archivoVotos.close();
+}
+
+void parsear(string cadenaAParsear, voto & votoParseado) {
+    int primero = 0, ultimo = 0, k = 0;
+    string palabra[20];
+
+    while(ultimo < cadenaAParsear.size()){
+        ultimo = cadenaAParsear.find(";", primero); //cuando no lo encuentra devuelve -1
+        if (ultimo == -1) ultimo = cadenaAParsear.size();
+        palabra[k] = cadenaAParsear.substr(primero, ultimo - primero) + '\0';
+        k++;
+        primero = ultimo + 1;
+    }
+
+     votoParseado.numero = stoi(palabra[0]);
+     votoParseado.genero = palabra[1][0]; 
+     votoParseado.edad = stoi(palabra[2]);
+}
