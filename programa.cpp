@@ -3,6 +3,7 @@
 #include <fstream>
 #include <ostream>
 #include <string>
+#include <string.h>
 using namespace std;
 
 #define _TOPE_LISTAS 5
@@ -33,10 +34,11 @@ void cargarVotos(tVotos & votos);
 void parsear(string cadenaAParsear, voto & votoParseado);
 void ordenarVotos(tVotos votos, int desde, int hasta);
 int colocar(tVotos votos, int desde, int hasta);
-void conteoVotos(tVotos votos, votoInvalido & votosInvalidos, tListas & listas);
+void conteoVotos(tVotos votos, tListas & listas,votoInvalido & votosInvalidos);
 void sacarPromedioVotosValidos(tListas & listas, votoInvalido & votosInvalidos);
 void mostrarVotos(tVotos votos);
 void mostrarDatos(tListas listas, votoInvalido votosInvalidos);
+void traer(tVotos votos, voto & v, int cant, int & ptro, bool & fin);
 // void procesarVotos();
 
 int main(){
@@ -46,12 +48,9 @@ int main(){
     
     cargarLista(listas);
     cargarVotos(votos);
-    mostrarVotos(votos);
     ordenarVotos(votos, 0, _TOPE_VOTOS-1);
-    conteoVotos(votos, votosInvalidos, listas);
-    mostrarVotos(votos);
-    mostrarDatos(listas, votosInvalidos);
-    //procesarVotos();
+    //mostrarDatos(listas, votosInvalidos);
+    conteoVotos(votos, listas, votosInvalidos);
 }
 
 void cargarLista(tListas & listas) {
@@ -138,7 +137,7 @@ int colocar(tVotos votos, int desde, int hasta){
     return pivote;
 }
 
-void conteoVotos(tVotos votos, votoInvalido & votosInvalidos, tListas & listas){
+/*void conteoVotos(tVotos votos, votoInvalido & votosInvalidos, tListas & listas){
     votosInvalidos.votoNulo = 0;
     votosInvalidos.votoBlanco = 0;
 
@@ -160,6 +159,58 @@ void conteoVotos(tVotos votos, votoInvalido & votosInvalidos, tListas & listas){
     }
 
     sacarPromedioVotosValidos(listas, votosInvalidos);
+}*/
+
+void clasificarVotos(votoInvalido & votosInvalidos, tListas & listas, int v, int total){
+    if(v < 0 || v > _TOPE_LISTAS){
+        votosInvalidos.votoNulo = total;
+    }
+    else if(v == 0){
+        votosInvalidos.votoBlanco = total;
+    }
+    else{
+        for (int j = 0; j < _TOPE_LISTAS; j++){
+            if(v == listas[j].numero){
+                listas[j].cantidadVotos = total;
+                j = _TOPE_LISTAS;
+            }
+        }
+    }
+}
+
+void conteoVotos (tVotos votos, tListas & listas, votoInvalido & votosInvalidos) {
+    int listaAnterior;
+    int i = 0;
+    voto v;
+    bool fin;
+    int total = 0;
+    int totalLista;
+    traer(votos, v, _TOPE_VOTOS, i, fin);
+    while (!fin) {
+        listaAnterior = v.numero;
+        totalLista = 0;
+        cout<<"Lista "<<listaAnterior<<endl;
+        while ((!fin ) && listaAnterior==v.numero) {
+            totalLista ++;
+            traer(votos, v, _TOPE_VOTOS, i, fin);
+        }
+        cout<<"Total listas "<<totalLista<<endl;
+        total = total + totalLista;
+        clasificarVotos(votosInvalidos, listas, listaAnterior, totalLista);
+    }
+    cout<<"total ingreso de las listas es "<<total<<endl;
+    for (int j = 0; j < _TOPE_LISTAS; j++){
+        cout<<listas[j].numero<<endl;
+        cout<<listas[j].cantidadVotos<<endl;
+    }
+}
+
+void traer(tVotos votos, voto & v, int cant, int & ptro, bool & fin) {
+    if (ptro<cant) {
+        v = votos[ptro];
+        ptro++;
+        fin = false ;
+    } else fin = true;
 }
 
 void sacarPromedioVotosValidos(tListas & listas, votoInvalido & votosInvalidos){
