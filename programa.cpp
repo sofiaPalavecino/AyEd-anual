@@ -46,6 +46,7 @@ void traer(tVotos votos, voto & v, int cant, int & ptro, bool & fin);
 void DHont(tListas & listas, votoInvalido votosInvalidos);
 void ponderacionCantidadVotos(tListas & listas);
 void ordenarListas(tListas & listas);
+void buscarElMayor(tListas & listas, int & tope, int & numLista);
 
 int main(){
     tListas listas;
@@ -269,10 +270,17 @@ void mostrarDatos(tListas listas, votoInvalido votosInvalidos){
     for (int i = 0; i < _TOPE_LISTAS; i++){
 
         cout<<"Número de la lista: " << listas[i].numero<<endl;
-        cout<<"Nombre de la lista: " << listas[i].nombre<<endl;
-        cout<<"Cantidad de votos de la lista: " << listas[i].cantidadVotos<<endl;
+        //cout<<"Nombre de la lista: " << listas[i].nombre<<endl;
+        //cout<<"Cantidad de votos de la lista: " << listas[i].cantidadVotos<<endl;
         cout<<"Porcentaje dentro de los votos válidos: " << listas[i].porcentajeVotosValidos<<"%"<<endl;
-        cout<<"Candidatos: "<<endl;
+        cout<<"Ponderacion"<<endl;
+        for (int j = 0; j < _TOPE_BANCAS; j++)
+        {
+            cout<<listas[i].votosPonderados[j]<<" ";
+        }
+        cout<<endl;
+        cout<<"Bancas" << listas[i].bancasObtenidas<<endl;
+        /*cout<<"Candidatos: "<<endl;
         cout<<"______________Titulares_______________"<<endl;
         for (int j = 0; j < _TOPE_CANDIDATOS; j++)
         {
@@ -283,14 +291,23 @@ void mostrarDatos(tListas listas, votoInvalido votosInvalidos){
 
         }
         cout<<"______________________________________"<<endl;
-        cout<<endl;
+        cout<<endl;*/
 
     }
 }
 
 void DHont(tListas & listas, votoInvalido votosInvalidos){
     ponderacionCantidadVotos(listas);
-    
+    mostrarDatos(listas, votosInvalidos);
+    int i = 1;
+    int tope = _TOPE_VOTOS;
+    int numLista = 0;
+    while (i<=_TOPE_BANCAS)
+    {
+        buscarElMayor(listas, tope, numLista);
+        i++;
+    }
+    mostrarDatos(listas, votosInvalidos);
 }
 
 void ponderacionCantidadVotos(tListas & listas){
@@ -301,4 +318,37 @@ void ponderacionCantidadVotos(tListas & listas){
             }
         } else listas[i].bancasObtenidas = 0;
     }
+}
+
+void buscarElMayor(tListas & listas, int & tope, int & numLista){
+    int mayor = 0;
+    int ponVoto = 0;
+    int posicion = 0;
+    //lista con todos los valores y numero de lista al que pertenecen :), ordenarla de menor a mayor y guardarse los primeros 13 valores
+    for (int i = 0; i < _TOPE_LISTAS; i++)
+    {
+        for (int j = 0; j < _TOPE_BANCAS; j++)
+        {
+            if(listas[i].votosPonderados[j]>mayor && listas[i].votosPonderados[j]<=tope && listas[i].porcentajeVotosValidos >= 3.0){
+                mayor = listas[i].votosPonderados[j];
+                numLista = listas[i].numero;
+                posicion = i;
+                ponVoto = j;
+            } 
+        }
+        
+    }
+
+    tope = mayor;
+    cout<<mayor<<endl;
+    cout<<numLista<<endl;
+
+    for (int i = 0; i < _TOPE_BANCAS; i++)
+    {
+        if(listas[i].numero==numLista){
+            listas[i].bancasObtenidas++;
+            i = _TOPE_BANCAS;
+        }
+    }
+    listas[posicion].votosPonderados[ponVoto] = 0;
 }
