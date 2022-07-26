@@ -9,6 +9,7 @@ using namespace std;
 #define _TOPE_LISTAS 5
 #define _TOPE_CANDIDATOS 25
 #define _TOPE_VOTOS 300
+#define _TOPE_BANCAS 13
 struct voto {
     int numero;
     char genero;
@@ -24,10 +25,13 @@ struct lista {
     float porcentajeVotosValidos;
     string nombre;
     string candidatos[_TOPE_CANDIDATOS];
+    int bancasObtenidas;
+    int votosPonderados[_TOPE_BANCAS];
 };
 
 typedef lista tListas[_TOPE_LISTAS];
 typedef voto tVotos[_TOPE_VOTOS];
+typedef int tPondVotos[_TOPE_LISTAS][_TOPE_BANCAS];
 
 void cargarLista(tListas & listas);
 void cargarVotos(tVotos & votos);
@@ -39,18 +43,23 @@ void sacarPromedioVotosValidos(tListas & listas, votoInvalido & votosInvalidos);
 void mostrarVotos(tVotos votos);
 void mostrarDatos(tListas listas, votoInvalido votosInvalidos);
 void traer(tVotos votos, voto & v, int cant, int & ptro, bool & fin);
-// void procesarVotos();
+void DHont(tListas & listas, votoInvalido votosInvalidos);
+void ponderacionCantidadVotos(tListas & listas);
+void ordenarListas(tListas & listas);
 
 int main(){
     tListas listas;
     tVotos votos;
     votoInvalido votosInvalidos;
+    tPondVotos cantVotDiv;
     
     cargarLista(listas);
     cargarVotos(votos);
     ordenarVotos(votos, 0, _TOPE_VOTOS-1);
-    //mostrarDatos(listas, votosInvalidos);
     conteoVotos(votos, listas, votosInvalidos);
+    //mostrarDatos(listas, votosInvalidos);
+    ordenarListas(listas);
+    DHont(listas,votosInvalidos);
 }
 
 void cargarLista(tListas & listas) {
@@ -118,6 +127,19 @@ void ordenarVotos(tVotos votos, int desde, int hasta){
     }
 }
 
+void ordenarListas(tListas & listas){
+    lista aux;
+    for(int i = 0; i < _TOPE_LISTAS ; i++){
+        for(int j = i + 1 ; j < _TOPE_LISTAS ; j++){
+            if(listas[i].cantidadVotos < listas[j].cantidadVotos) {
+                aux=listas[i];
+                listas[i]=listas[j];
+                listas[j]=aux;
+            }
+        }
+    }
+}
+
 int colocar(tVotos votos, int desde, int hasta){
     int i, pivote = desde;
     voto temp, valor_pivote = votos[pivote];
@@ -176,6 +198,7 @@ void clasificarVotos(votoInvalido & votosInvalidos, tListas & listas, int v, int
             }
         }
     }
+    sacarPromedioVotosValidos(listas, votosInvalidos);
 }
 
 void conteoVotos (tVotos votos, tListas & listas, votoInvalido & votosInvalidos) {
@@ -245,10 +268,10 @@ void mostrarDatos(tListas listas, votoInvalido votosInvalidos){
 
     for (int i = 0; i < _TOPE_LISTAS; i++){
 
-        cout<<"Numero de la lista: " << listas[i].numero<<endl;
+        cout<<"Número de la lista: " << listas[i].numero<<endl;
         cout<<"Nombre de la lista: " << listas[i].nombre<<endl;
         cout<<"Cantidad de votos de la lista: " << listas[i].cantidadVotos<<endl;
-        cout<<"Cantidad de votos validos: " << listas[i].porcentajeVotosValidos<<"%"<<endl;
+        cout<<"Porcentaje dentro de los votos válidos: " << listas[i].porcentajeVotosValidos<<"%"<<endl;
         cout<<"Candidatos: "<<endl;
         cout<<"______________Titulares_______________"<<endl;
         for (int j = 0; j < _TOPE_CANDIDATOS; j++)
@@ -262,5 +285,20 @@ void mostrarDatos(tListas listas, votoInvalido votosInvalidos){
         cout<<"______________________________________"<<endl;
         cout<<endl;
 
+    }
+}
+
+void DHont(tListas & listas, votoInvalido votosInvalidos){
+    ponderacionCantidadVotos(listas);
+    
+}
+
+void ponderacionCantidadVotos(tListas & listas){
+    for (int i = 0; i < _TOPE_LISTAS; i++){
+        if(listas[i].porcentajeVotosValidos >= 3.0){
+            for (int j = 0; j < _TOPE_BANCAS; j++){
+                listas[i].votosPonderados[j] = listas[i].cantidadVotos/(j+1);
+            }
+        } else listas[i].bancasObtenidas = 0;
     }
 }
