@@ -344,29 +344,27 @@ void ordenarCantidadVotos(int votosPond[][2], int cantidad){
         }
     }
 
-    /*for(int i = 0; i < cantidad ; i++){
-        cout<<votosPond[i][0]<<" "<<votosPond[i][1]<<endl;
-    }*/
-    
+
 }
 
 void asignarBancas(tListas & listas, int votosPond[][2]){
     for (int i = 0; i < _TOPE_BANCAS; i++){
         cout<<"asignarbancas"<<endl;
-        cout<<votosPond[i][1]<<endl;
+        cout<< "Voto numero "<<i<<" :" <<votosPond[i][0]<<"," <<votosPond[i][1]<<endl;
         cout<<buscarLista(votosPond[i][1],listas)<<endl;
         //cout<<listas[buscarLista(votosPond[i][1],listas)].bancasObtenidas<<endl;
-        //listas[buscarLista(votosPond[i][1],listas)].bancasObtenidas++;
+        listas[buscarLista(votosPond[i][1],listas)].bancasObtenidas++;
     }
 }
 
 int buscarLista(int numLista, tListas & listas){
     int i = 0;
     while (i<_TOPE_LISTAS && numLista!=listas[i].numero){
-        cout<<"buscarlista"<<endl;
-        cout<<numLista<<" "<<listas[i].numero<<endl;
         i = i+1;
     }
-    if (i>_TOPE_LISTAS || listas[i-1].numero!=numLista) i = -1;
+    if (i>_TOPE_LISTAS || listas[i].numero!=numLista) {
+        i = -1;
+    }
+
     return i;
 }
