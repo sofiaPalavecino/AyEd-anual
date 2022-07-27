@@ -10,6 +10,7 @@ using namespace std;
 #define _TOPE_CANDIDATOS 25
 #define _TOPE_VOTOS 300
 #define _TOPE_BANCAS 13
+
 struct voto {
     int numero;
     char genero;
@@ -25,7 +26,7 @@ struct lista {
     float porcentajeVotosValidos;
     string nombre;
     string candidatos[_TOPE_CANDIDATOS];
-    int bancasObtenidas=0;
+    int bancasObtenidas = 0;
     int votosPonderados[_TOPE_BANCAS];
 };
 
@@ -46,9 +47,9 @@ void traer(tVotos votos, voto & v, int cant, int & ptro, bool & fin);
 void DHont(tListas & listas, votoInvalido votosInvalidos);
 void ponderacionCantidadVotos(tListas & listas, int & cantListValidas);
 void ordenarListas(tListas & listas);
-void ordenarCantidadVotos(int votosPond[][2], int cantidad);
-void armarListaCantVotos(tListas & listas, int cantListValidas, int votosPond[][2]);
-void asignarBancas(tListas & listas, int votosPond[][2]);
+void ordenarCantidadVotos(int votosPond[][3], int cantidad);
+void armarListaCantVotos(tListas & listas, int cantListValidas, int votosPond[][3]);
+void asignarBancas(tListas & listas, int votosPond[][3]);
 int buscarLista(int numLista, tListas & listas);
 
 int main(){
@@ -298,8 +299,8 @@ void mostrarDatos(tListas listas, votoInvalido votosInvalidos){
 void DHont(tListas & listas, votoInvalido votosInvalidos){
     int cantListValidas = 0;
     ponderacionCantidadVotos(listas, cantListValidas);
-    int cantidad = _TOPE_BANCAS*cantListValidas;
-    int votosPond[cantidad][2];
+    int cantidad = _TOPE_BANCAS * cantListValidas;
+    int votosPond[cantidad][3];
     armarListaCantVotos(listas, cantListValidas, votosPond);
     ordenarCantidadVotos(votosPond, cantidad);
     asignarBancas(listas, votosPond);
@@ -317,29 +318,36 @@ void ponderacionCantidadVotos(tListas & listas, int & cantListValidas){
     }
 }
 
-void armarListaCantVotos(tListas & listas, int cantListValidas, int votosPond[][2]){
+void armarListaCantVotos(tListas & listas, int cantListValidas, int votosPond[][3]){
     int x = 0;
+    
     for (int i = 0; i < cantListValidas; i++){
         for (int j = 0; j < _TOPE_BANCAS; j++){
             votosPond[x][0]=listas[i].votosPonderados[j];
             votosPond[x][1]=listas[i].numero;
+            votosPond[x][2]=listas[i].porcentajeVotosValidos;
             x++;
         }
     }
 }
 
-void ordenarCantidadVotos(int votosPond[][2], int cantidad){
-    int cantAux;
-    int listaAux;
+void ordenarCantidadVotos(int votosPond[][3], int cantidad){
+    int cantAux, listaAux;
+    float porcentajeAux;
+    
     for(int i = 0; i < cantidad ; i++){
         for(int j = i + 1 ; j < cantidad; j++){
-            if(votosPond[i][0] < votosPond[j][0]) {
+            // si el voto dividio por x es mayor que el siguiente o es igual pero el porcentaje es mayor que el siguiente
+            if(votosPond[j][0] > votosPond[i][0]  || (votosPond[i][0] == votosPond[j][0] && votosPond[i][2] < votosPond[j][2])) {
                 cantAux=votosPond[i][0];
                 listaAux=votosPond[i][1];
+                porcentajeAux=votosPond[i][2];
                 votosPond[i][0]=votosPond[j][0];
                 votosPond[i][1]=votosPond[j][1];
+                votosPond[i][2]=votosPond[j][2];
                 votosPond[j][0]=cantAux;
                 votosPond[j][1]=listaAux;
+                votosPond[j][2]=porcentajeAux;
             }
         }
     }
@@ -347,7 +355,7 @@ void ordenarCantidadVotos(int votosPond[][2], int cantidad){
 
 }
 
-void asignarBancas(tListas & listas, int votosPond[][2]){
+void asignarBancas(tListas & listas, int votosPond[][3]){
     for (int i = 0; i < _TOPE_BANCAS; i++){
         cout<<"asignarbancas"<<endl;
         cout<< "Voto numero "<<i<<" :" <<votosPond[i][0]<<"," <<votosPond[i][1]<<endl;
@@ -359,6 +367,7 @@ void asignarBancas(tListas & listas, int votosPond[][2]){
 
 int buscarLista(int numLista, tListas & listas){
     int i = 0;
+    
     while (i<_TOPE_LISTAS && numLista!=listas[i].numero){
         i = i+1;
     }
