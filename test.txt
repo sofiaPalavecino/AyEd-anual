@@ -1,1 +1,0 @@
-Listas | Cantidad de votos | Porcentaje de votos validos| Primera banca  | Segunda banca  | Tercera banca  | Cuarta banca   | Quinta banca   | Sexta banca    | Séptima banca | Octava banca   | Novena banca   | Décima banca  | Onceava banca  | Doceava banca  | Treceava banca 
