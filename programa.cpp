@@ -4,6 +4,8 @@
 #include <ostream>
 #include <string>
 #include <string.h>
+#include <fstream>
+#include <iomanip>
 using namespace std;
 
 #define _TOPE_LISTAS 5
@@ -51,6 +53,7 @@ void ordenarCantidadVotos(int votosPond[][3], int cantidad);
 void armarListaCantVotos(tListas & listas, int cantListValidas, int votosPond[][3]);
 void asignarBancas(tListas & listas, int votosPond[][3]);
 int buscarLista(int numLista, tListas & listas);
+void tablaDHont(/*tListas listas*/);
 
 int main(){
     tListas listas;
@@ -65,7 +68,36 @@ int main(){
     ordenarListas(listas);
     DHont(listas,votosInvalidos);
     mostrarDatos(listas, votosInvalidos);
+    tablaDHont(listas);
 }
+
+void tablaDHont(tListas listas){
+    ofstream archivoTexto;
+    archivoTexto.open ("Tabla_de_resultados.txt");
+    streambuf* sbuf = cout.rdbuf();
+    cout.rdbuf(archivoTexto.rdbuf());
+    
+    cout << left << setw(7)     << "Listas"                       << left << setw(2) << "|" 
+         << left << setw(18)    << "Cantidad de votos"            << left << setw(2) << "|"
+         << left << setw(7)     << "Porcentaje de votos validos"  << left << setw(2) << "|"
+         << left << setw(15)    << "Primera banca"                << left << setw(2) << "|"
+         << left << setw(15)    << "Segunda banca"                << left << setw(2) << "|"
+         << left << setw(15)    << "Tercera banca"                << left << setw(2) << "|"
+         << left << setw(15)    << "Cuarta banca"                 << left << setw(2) << "|"
+         << left << setw(15)    << "Quinta banca"                 << left << setw(2) << "|"
+         << left << setw(15)    << "Sexta banca"                  << left << setw(2) << "|"
+         << left << setw(15)    << "Séptima banca"                << left << setw(2) << "|"
+         << left << setw(15)    << "Octava banca"                 << left << setw(2) << "|"
+         << left << setw(15)    << "Novena banca"                 << left << setw(2) << "|"
+         << left << setw(15)    << "Décima banca"                 << left << setw(2) << "|"
+         << left << setw(15)    << "Onceava banca"                << left << setw(2) << "|"
+         << left << setw(15)    << "Doceava banca"                << left << setw(2) << "|"
+         << left << setw(15)    << "Treceava banca"               << endl;
+
+
+    cout.rdbuf(sbuf);
+    cout << "La tabla con los resultados de la elección fué ingresada en 'Tabla_de_resultados.txt'" << endl;
+};
 
 void cargarLista(tListas & listas) {
     string nombreCandidato;
@@ -163,30 +195,6 @@ int colocar(tVotos votos, int desde, int hasta){
     votos[pivote] = temp;
     return pivote;
 }
-
-/*void conteoVotos(tVotos votos, votoInvalido & votosInvalidos, tListas & listas){
-    votosInvalidos.votoNulo = 0;
-    votosInvalidos.votoBlanco = 0;
-
-    for (int i = 0; i < _TOPE_VOTOS; i++){
-        if(votos[i].numero < 0 or votos[i].numero > _TOPE_LISTAS){
-            votosInvalidos.votoNulo += 1;
-        }
-        else if(votos[i].numero == 0){
-            votosInvalidos.votoBlanco += 1;
-        }
-        else{
-            for (int j = 0; j < _TOPE_LISTAS; j++){
-                if(votos[i].numero == listas[j].numero){
-                    listas[j].cantidadVotos += 1;
-                    j = _TOPE_LISTAS;
-                }
-            }
-        }
-    }
-
-    sacarPromedioVotosValidos(listas, votosInvalidos);
-}*/
 
 void clasificarVotos(votoInvalido & votosInvalidos, tListas & listas, int v, int total){
     if(v < 0 || v > _TOPE_LISTAS){
