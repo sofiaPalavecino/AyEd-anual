@@ -50,7 +50,10 @@ void ordenarListas(tListas & listas);
 void ordenarCantidadVotos(int votosPond[][3], int cantidad);
 void armarListaCantVotos(tListas & listas, int cantListValidas, int votosPond[][3]);
 void asignarBancas(tListas & listas, int votosPond[][3]);
-int buscarLista(int numLista, tListas & listas);
+int buscarLista(int numLista, tListas listas);
+void clasificacionEdades(tVotos votos, tListas listas);
+void verRangoEdad(voto v, int listaAnterior,  int & hasta18, int & hasta30, int & hasta50, int & masDe50);
+void MostrarRangosEdad(voto v, int listaAnterior,  int & hasta18, int & hasta30, int & hasta50, int & masDe50);
 
 int main(){
     tListas listas;
@@ -64,7 +67,9 @@ int main(){
     conteoVotos(votos, listas, votosInvalidos);
     ordenarListas(listas);
     DHont(listas,votosInvalidos);
+    clasificacionEdades(votos, listas); // PUNTO 4
     mostrarDatos(listas, votosInvalidos);
+
 }
 
 void cargarLista(tListas & listas) {
@@ -163,30 +168,6 @@ int colocar(tVotos votos, int desde, int hasta){
     votos[pivote] = temp;
     return pivote;
 }
-
-/*void conteoVotos(tVotos votos, votoInvalido & votosInvalidos, tListas & listas){
-    votosInvalidos.votoNulo = 0;
-    votosInvalidos.votoBlanco = 0;
-
-    for (int i = 0; i < _TOPE_VOTOS; i++){
-        if(votos[i].numero < 0 or votos[i].numero > _TOPE_LISTAS){
-            votosInvalidos.votoNulo += 1;
-        }
-        else if(votos[i].numero == 0){
-            votosInvalidos.votoBlanco += 1;
-        }
-        else{
-            for (int j = 0; j < _TOPE_LISTAS; j++){
-                if(votos[i].numero == listas[j].numero){
-                    listas[j].cantidadVotos += 1;
-                    j = _TOPE_LISTAS;
-                }
-            }
-        }
-    }
-
-    sacarPromedioVotosValidos(listas, votosInvalidos);
-}*/
 
 void clasificarVotos(votoInvalido & votosInvalidos, tListas & listas, int v, int total){
     if(v < 0 || v > _TOPE_LISTAS){
@@ -365,7 +346,7 @@ void asignarBancas(tListas & listas, int votosPond[][3]){
     }
 }
 
-int buscarLista(int numLista, tListas & listas){
+int buscarLista(int numLista, tListas listas){
     int i = 0;
     
     while (i<_TOPE_LISTAS && numLista!=listas[i].numero){
@@ -376,4 +357,54 @@ int buscarLista(int numLista, tListas & listas){
     }
 
     return i;
+}
+
+void clasificacionEdades(tVotos votos, tListas listas) {
+        int listaAnterior;
+    int i = 0;
+    voto v;
+    bool fin;
+    int hasta18=0;
+    int hasta30=0;
+    int hasta50=0;
+    int masDe50=0;
+    traer(votos, v, _TOPE_VOTOS, i, fin);
+    while (!fin) {
+        listaAnterior = v.numero;
+        while ((!fin ) && listaAnterior==v.numero) {
+            verRangoEdad(v, listaAnterior, hasta18, hasta30, hasta50, masDe50);
+            traer(votos, v, _TOPE_VOTOS, i, fin);
+        }
+        MostrarRangosEdad(v,listaAnterior,hasta18, hasta30, hasta50, masDe50);
+    }
+}
+
+void verRangoEdad(voto v, int listaAnterior,  int & hasta18, int & hasta30, int & hasta50, int & masDe50){
+    if(listaAnterior > 0 && listaAnterior < _TOPE_LISTAS){
+        if (v.edad<18) {
+            hasta18++;
+        } else if (v.edad<30) {
+            hasta30++;
+        } else if (v.edad<50) {
+            hasta50++;
+        } else {
+            masDe50++;
+        }
+    }
+
+}
+
+void MostrarRangosEdad(voto v, int listaAnterior,  int & hasta18, int & hasta30, int & hasta50, int & masDe50){
+    if(listaAnterior > 0 && listaAnterior < _TOPE_LISTAS){
+        cout<<"Lista "<<listaAnterior<<endl;
+        cout << "Hasta 18: " << hasta18 << endl;
+        cout << "Hasta 30: " << hasta30 << endl;
+        cout << "Hasta 50: " << hasta50 << endl;
+        cout << "Mas de 50: " << masDe50 << endl;
+        hasta18=0;
+        hasta30=0;
+        hasta50=0;
+        masDe50=0;
+    }
+
 }
