@@ -53,8 +53,9 @@ void ordenarCantidadVotos(int votosPond[][3], int cantidad);
 void armarListaCantVotos(tListas & listas, int cantListValidas, int votosPond[][3]);
 void asignarBancas(tListas & listas, int votosPond[][3]);
 int buscarLista(int numLista, tListas & listas);
-void tablaDHont(tListas listas);
-void imprimirDatosEleccion(tListas listas);
+void tablaDHont(tListas listas, votoInvalido & votosInvalidos);
+void imprimirVotosValidos(tListas listas, votoInvalido & votosInvalidos);
+void imprimirVotosInvalidos(votoInvalido & votosInvalidos);
 
 int main(){
     tListas listas;
@@ -69,7 +70,7 @@ int main(){
     ordenarListas(listas);
     DHont(listas,votosInvalidos);
     //mostrarDatos(listas, votosInvalidos);
-    tablaDHont(listas);
+    tablaDHont(listas, votosInvalidos);
 }
 
 void cargarLista(tListas & listas) {
@@ -359,13 +360,13 @@ int buscarLista(int numLista, tListas & listas){
     return i;
 }
 
-void tablaDHont(tListas listas){
+void tablaDHont(tListas listas, votoInvalido & votosInvalidos){
     ofstream archivoTexto;
     archivoTexto.open ("Tabla_de_resultados.txt");
     streambuf* sbuf = cout.rdbuf();
     cout.rdbuf(archivoTexto.rdbuf());
     
-    cout << left << setw(7)  << "Listas"                      << left << setw(2) << "|" 
+    cout << left << setw(14) << "Listas"                      << left << setw(2) << "|" 
          << left << setw(18) << "Cantidad de votos"           << left << setw(2) << "|"
          << left << setw(7)  << "Porcentaje de votos validos" << left << setw(2) << "|"
          << left << setw(7)  << "01° banca"                   << left << setw(2) << "|"
@@ -384,15 +385,16 @@ void tablaDHont(tListas listas){
          << left << setw(37) << "Ganan"                       << left << setw(2) << "|"
          <<endl;
 
-    imprimirDatosEleccion(listas);
+    imprimirVotosValidos(listas, votosInvalidos);
+    imprimirVotosInvalidos(votosInvalidos);
 
     cout.rdbuf(sbuf);
     cout << "La tabla con los resultados de la elección fué ingresada en 'Tabla_de_resultados.txt'" << endl;
 }
 
-void imprimirDatosEleccion(tListas listas){
+void imprimirVotosValidos(tListas listas, votoInvalido & votosInvalidos){
     for (int  i = 0; i < _TOPE_LISTAS; i++){
-        cout << left << setw(7)  << listas[i].numero                 << left << setw(2) << "|"
+        cout << left << setw(14)  << listas[i].numero                 << left << setw(2) << "|"
              << left << setw(18) << listas[i].cantidadVotos          << left << setw(2) << "|"
              << listas[i].porcentajeVotosValidos << left << setw(20) << "%" << left << setw(2) << "|" << left << setw(9);
         for (int j = 0; j < _TOPE_BANCAS; j++){
@@ -409,5 +411,24 @@ void imprimirDatosEleccion(tListas listas){
         }
         
         cout<<endl;
+    }
+}
+
+void imprimirVotosInvalidos(votoInvalido & votosInvalidos){
+    for (int i = 0; i <= 1; i++){
+        if(i==0){
+            cout << left << setw(7) << "Voto en blanco" << left << setw(2) << "|"
+                 << left << setw(18) << votosInvalidos.votoBlanco << left << setw(2) << "|";
+        }else{
+            cout << left << setw(14) << "Voto Nulo" << left << setw(2) << "|"
+                 << left << setw(18) << votosInvalidos.votoNulo << left << setw(2) << "|";
+        }
+        
+        cout << left << setw(27)  << "X" << left << setw(2) << "|";
+
+        for (int j = 0; j < _TOPE_BANCAS ; j++){
+            cout << left << setw(9)  << "X" << left << setw(2) << "|";
+        }
+        cout << left << setw(37)  << "X" << left << setw(2) << "|"<< endl;
     }
 }
