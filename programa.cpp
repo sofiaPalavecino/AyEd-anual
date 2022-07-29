@@ -53,7 +53,7 @@ void ordenarCantidadVotos(int votosPond[][3], int cantidad);
 void armarListaCantVotos(tListas & listas, int cantListValidas, int votosPond[][3]);
 void asignarBancas(tListas & listas, int votosPond[][3]);
 int buscarLista(int numLista, tListas & listas);
-void tablaDHont(/*tListas listas*/);
+void tablaDHont(tListas listas);
 
 int main(){
     tListas listas;
@@ -67,37 +67,9 @@ int main(){
     conteoVotos(votos, listas, votosInvalidos);
     ordenarListas(listas);
     DHont(listas,votosInvalidos);
-    mostrarDatos(listas, votosInvalidos);
+    //mostrarDatos(listas, votosInvalidos);
     tablaDHont(listas);
 }
-
-void tablaDHont(tListas listas){
-    ofstream archivoTexto;
-    archivoTexto.open ("Tabla_de_resultados.txt");
-    streambuf* sbuf = cout.rdbuf();
-    cout.rdbuf(archivoTexto.rdbuf());
-    
-    cout << left << setw(7)     << "Listas"                       << left << setw(2) << "|" 
-         << left << setw(18)    << "Cantidad de votos"            << left << setw(2) << "|"
-         << left << setw(7)     << "Porcentaje de votos validos"  << left << setw(2) << "|"
-         << left << setw(15)    << "Primera banca"                << left << setw(2) << "|"
-         << left << setw(15)    << "Segunda banca"                << left << setw(2) << "|"
-         << left << setw(15)    << "Tercera banca"                << left << setw(2) << "|"
-         << left << setw(15)    << "Cuarta banca"                 << left << setw(2) << "|"
-         << left << setw(15)    << "Quinta banca"                 << left << setw(2) << "|"
-         << left << setw(15)    << "Sexta banca"                  << left << setw(2) << "|"
-         << left << setw(15)    << "Séptima banca"                << left << setw(2) << "|"
-         << left << setw(15)    << "Octava banca"                 << left << setw(2) << "|"
-         << left << setw(15)    << "Novena banca"                 << left << setw(2) << "|"
-         << left << setw(15)    << "Décima banca"                 << left << setw(2) << "|"
-         << left << setw(15)    << "Onceava banca"                << left << setw(2) << "|"
-         << left << setw(15)    << "Doceava banca"                << left << setw(2) << "|"
-         << left << setw(15)    << "Treceava banca"               << endl;
-
-
-    cout.rdbuf(sbuf);
-    cout << "La tabla con los resultados de la elección fué ingresada en 'Tabla_de_resultados.txt'" << endl;
-};
 
 void cargarLista(tListas & listas) {
     string nombreCandidato;
@@ -384,4 +356,54 @@ int buscarLista(int numLista, tListas & listas){
     }
 
     return i;
+}
+
+void tablaDHont(tListas listas){
+    ofstream archivoTexto;
+    archivoTexto.open ("Tabla_de_resultados.txt");
+    streambuf* sbuf = cout.rdbuf();
+    cout.rdbuf(archivoTexto.rdbuf());
+    
+    cout << left << setw(7)  << "Listas"                      << left << setw(2) << "|" 
+         << left << setw(18) << "Cantidad de votos"           << left << setw(2) << "|"
+         << left << setw(7)  << "Porcentaje de votos validos" << left << setw(2) << "|"
+         << left << setw(7)  << "01° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "02° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "03° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "04° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "05° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "06° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "07° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "08° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "09° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "10° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "11° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "12° banca"                   << left << setw(2) << "|"
+         << left << setw(7)  << "13° banca"                   << left << setw(2) << "|"
+         << left << setw(37) << "Ganan"                       << left << setw(2) << "|"
+         <<endl;
+
+
+    for (int  i = 0; i < _TOPE_LISTAS; i++){
+        cout << left << setw(7)  << listas[i].numero                 << left << setw(2) << "|"
+             << left << setw(18) << listas[i].cantidadVotos          << left << setw(2) << "|"
+             << listas[i].porcentajeVotosValidos << left << setw(20) << "%" << left << setw(2) << "|" << left << setw(9);
+        for (int j = 0; j < _TOPE_BANCAS; j++){
+            cout << listas[i].votosPonderados[j] << left << setw(2) << "|" << left << setw(9);
+        }
+
+        if(listas[i].bancasObtenidas == 0){
+            cout << left << setw(7) << "Obtuvo menos del 3%, queda DESCARTADA" << left << setw(2) << "|"; 
+        }else{
+            cout << left << setw(7) << "Obtiene " << listas[i].bancasObtenidas << left << setw(28);
+            if(listas[i].bancasObtenidas == 1){
+                cout << " banca" << left << setw(2) << "|"; 
+            }else cout << " bancas" << left << setw(2) << "|";
+        }
+        
+        cout<<endl;
+    }
+
+    cout.rdbuf(sbuf);
+    cout << "La tabla con los resultados de la elección fué ingresada en 'Tabla_de_resultados.txt'" << endl;
 }
