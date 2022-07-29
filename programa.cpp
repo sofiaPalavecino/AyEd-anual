@@ -54,6 +54,7 @@ void armarListaCantVotos(tListas & listas, int cantListValidas, int votosPond[][
 void asignarBancas(tListas & listas, int votosPond[][3]);
 int buscarLista(int numLista, tListas & listas);
 void tablaDHont(tListas listas);
+void imprimirDatosEleccion(tListas listas);
 
 int main(){
     tListas listas;
@@ -383,7 +384,13 @@ void tablaDHont(tListas listas){
          << left << setw(37) << "Ganan"                       << left << setw(2) << "|"
          <<endl;
 
+    imprimirDatosEleccion(listas);
 
+    cout.rdbuf(sbuf);
+    cout << "La tabla con los resultados de la elección fué ingresada en 'Tabla_de_resultados.txt'" << endl;
+}
+
+void imprimirDatosEleccion(tListas listas){
     for (int  i = 0; i < _TOPE_LISTAS; i++){
         cout << left << setw(7)  << listas[i].numero                 << left << setw(2) << "|"
              << left << setw(18) << listas[i].cantidadVotos          << left << setw(2) << "|"
@@ -403,7 +410,4 @@ void tablaDHont(tListas listas){
         
         cout<<endl;
     }
-
-    cout.rdbuf(sbuf);
-    cout << "La tabla con los resultados de la elección fué ingresada en 'Tabla_de_resultados.txt'" << endl;
 }
