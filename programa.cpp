@@ -52,10 +52,14 @@ void ordenarCantidadVotos(int votosPond[][3], int cantidad);
 void asignarBancas(tListas & listas, int votosPond[][3]);
 int buscarLista(int numLista, tListas listas);
 void mostrarDatos(tListas listas, votoInvalido votosInvalidos);
-void tablaDHont(tListas listas, votoInvalido & votosInvalidos);
+void tablaDHont(tListas listas, votoInvalido & votosInvalidos, tVotos votos);
 void imprimirVotosValidos(tListas listas);
 void imprimirVotosInvalidos(tListas listas, votoInvalido & votosInvalidos);
-int conseguirMargen(int margenInicial, float anterior);
+int agregarMargen(int margen, int numero, int banca2Digitos = 0);
+void verRangoEdad(voto v, int listaAnterior,  int & hasta18, int & hasta30, int & hasta50, int & masDe50);
+void MostrarRangosEdad(voto v, int listaAnterior,  int & hasta18, int & hasta30, int & hasta50, int & masDe50);
+void imprimirRangoEdades(tListas listas, tVotos votos);
+void imprimirEncabezado();
 
 int main(){
     tListas listas;
@@ -69,112 +73,8 @@ int main(){
     conteoVotos(votos, listas, votosInvalidos);
     ordenarListas(listas);
     DHont(listas,votosInvalidos);
-    mostrarDatos(listas, votosInvalidos);
-    tablaDHont(listas, votosInvalidos);
-}
-
-void tablaDHont(tListas listas, votoInvalido & votosInvalidos){
-    ofstream archivoTexto("Tabla_de_resultados.txt");
-    streambuf* sbuf = cout.rdbuf();
-    cout.rdbuf(archivoTexto.rdbuf());
-
-    cout<<endl;
-
-    cout << "|" << " Listas " << setw(9) << "|" << " Cantidad de votos " << "|" << " Porcentaje de votos validos " << "|";
-
-    for (int i = 0; i < _TOPE_BANCAS; i++){
-        cout << " " << i + 1 << "° banca " << "|";
-    }
-
-    cout << " Bancas que ganan cada lista " << setw(11) << "|" << " Nombre de candidatos en las bancas " << endl;
-
-    imprimirVotosValidos(listas);
-    imprimirVotosInvalidos(listas, votosInvalidos);
-
-    cout.rdbuf(sbuf);
-    cout << "La tabla con los resultados de la eleccion fue ingresada en 'Tabla_de_resultados.txt'" << endl;
-};
-
-void imprimirVotosValidos(tListas listas){
-    for (int  i = 0; i < _TOPE_LISTAS; i++){
-        // listas, cantidad de votos, % de votos
-        if(listas[i].numero > 9){
-            cout << "|" << " Lista n°" << listas[i].numero << setw(conseguirMargen(6, listas[i].numero)) << "|";
-        }else cout << "|" << " Lista n°" << listas[i].numero << setw(conseguirMargen(7, listas[i].numero)) << "|";
-            cout << " " << listas[i].cantidadVotos << setw(conseguirMargen(18, listas[i].cantidadVotos)) << "|"
-            << " " << listas[i].porcentajeVotosValidos << "%" << setw(conseguirMargen(22, listas[i].porcentajeVotosValidos)) << "|";
-
-        // bancas
-        for (int j = 0; j < _TOPE_BANCAS; j++){
-            if(listas[j].bancasObtenidas == 0 and j < _TOPE_LISTAS){
-                cout << " " << setw(10) << "|";
-            }
-            else{
-                if(j > 8){
-                    cout << " " << listas[i].votosPonderados[j] << setw(conseguirMargen(10, listas[i].votosPonderados[j])) << "|";
-                }else cout << " " << listas[i].votosPonderados[j] << setw(conseguirMargen(9, listas[i].votosPonderados[j])) << "|";
-            }
-        }
-
-        // ganan
-        if(listas[i].bancasObtenidas == 0){
-            cout << " Obtuvo menos del 3%, queda DESCARTADA " << "|";
-        }else{
-            cout << " Obtiene " << listas[i].bancasObtenidas;
-
-            if(listas[i].bancasObtenidas == 1){
-                cout << " banca " << setw(conseguirMargen(23, listas[i].bancasObtenidas)) << "|";
-            }else cout << " bancas " << setw(conseguirMargen(22, listas[i].bancasObtenidas)) << "|";
-        }
-
-        // candidatos
-        for (int k = 0; k < listas[i].bancasObtenidas; k++){
-            if(k + 1 == listas[i].bancasObtenidas){
-                cout << " " << listas[i].candidatos[k]<<endl;
-            }else cout << " " << listas[i].candidatos[k] << ",";
-        }
-    }
-}
-
-void imprimirVotosInvalidos(tListas listas, votoInvalido & votosInvalidos){
-    for (int i = 0; i < 2; i++){
-
-        if(i == 0){
-            if(votosInvalidos.votoBlanco > 9){
-                cout << "|" << " Voto en blanco " << "|" << " " << votosInvalidos.votoBlanco << setw(conseguirMargen(18, votosInvalidos.votoBlanco)) << "|";
-            }else cout << "|" << " Voto en blanco " << "|" << " " << votosInvalidos.votoBlanco << setw(conseguirMargen(19, votosInvalidos.votoBlanco)) << "|";
-        }else{
-            if(votosInvalidos.votoNulo > 9){
-                cout << "|" << " Voto Nulo " << setw(6) << "|" << " " << votosInvalidos.votoNulo << setw(conseguirMargen(18, votosInvalidos.votoNulo)) << "|";
-            }else cout << "|" << " Voto Nulo " << setw(6) << "|" << " " << votosInvalidos.votoNulo << setw(conseguirMargen(19, votosInvalidos.votoNulo)) << "|";
-            
-        }
-        // votos validos
-        cout << " " << setw(conseguirMargen(30, votosInvalidos.votoBlanco)) << "|";
-        // bancas
-        for (int j = 0; j < _TOPE_BANCAS ; j++){
-            if(j > 8){
-                cout << " " << setw(11) << "|";
-            }else cout << " " << setw(10) << "|";
-        }
-        // ganan
-        cout << " Obtuvo menos del 3%, queda DESCARTADA " << "|" <<endl;
-    }
-}
-
-int conseguirMargen(int margenInicial, float anterior){
-  if (anterior < 10)
-    return margenInicial; // si entra aca tiene 1 carac
-  else if (anterior < 100)
-    return margenInicial - 1; // si entra aca tiene 2 carac
-  else if (anterior < 1000)
-    return margenInicial - 2; // si entra aca tiene 3 carac
-  else if (anterior < 10000)
-    return margenInicial - 3; // si entra aca tiene 4 carac
-  else if (anterior < 100000)
-    return margenInicial - 4; // si entra aca tiene 5 carac
-  else
-    return margenInicial - 5; // si llega aca tiene 6 carac
+    // mostrarDatos(listas, votosInvalidos);
+    tablaDHont(listas, votosInvalidos, votos);
 }
 
 void cargarLista(tListas & listas) {
@@ -270,16 +170,13 @@ void conteoVotos (tVotos votos, tListas & listas, votoInvalido & votosInvalidos)
     while (!fin) {
         listaAnterior = v.numero;
         totalLista = 0;
-        cout<<"Lista "<<listaAnterior<<endl;
         while ((!fin ) && listaAnterior == v.numero) {
             totalLista ++;
             traer(votos, v, _TOPE_VOTOS, i, fin);
         }
-        cout<<"Total listas "<<totalLista<<endl;
         total = total + totalLista;
         clasificarVotos(votosInvalidos, listas, listaAnterior, totalLista);
     }
-    cout<<"total ingreso de las listas es "<<total<<endl;
 
 }
 
@@ -448,19 +345,158 @@ void mostrarDatos(tListas listas, votoInvalido votosInvalidos){
             }
         }
         cout<<endl;
-        
-        /*cout<<"Candidatos: "<<endl;
-        cout<<"______________Titulares_______________"<<endl;
-        for (int j = 0; j < _TOPE_CANDIDATOS; j++)
-        {
-            if(j == 13){
-                cout<<"______________Suplentes_______________"<<endl;
+
+    }
+}
+
+void tablaDHont(tListas listas, votoInvalido & votosInvalidos, tVotos votos){
+    ofstream archivoTexto("Tabla_de_resultados.txt");
+    streambuf* sbuf = cout.rdbuf();
+    cout.rdbuf(archivoTexto.rdbuf());
+
+    cout << "|" << " Listas " << setw(9) << "|" << " Cantidad de votos " << "|" << " Porcentaje de votos validos " << "|";
+
+    for (int i = 0; i < _TOPE_BANCAS; i++){
+        cout << " " << i + 1 << "° banca " << "|";
+    }
+
+    cout << " Bancas que ganan cada lista " << setw(11) << "|" << " Nombre de candidatos en las bancas " << endl;
+
+    imprimirVotosValidos(listas);
+    imprimirVotosInvalidos(listas, votosInvalidos);
+    imprimirRangoEdades(listas, votos);
+
+    cout.rdbuf(sbuf);
+    cout << "La tabla con los resultados de la eleccion fue ingresada en 'Tabla_de_resultados.txt'" << endl;
+};
+
+void imprimirVotosValidos(tListas listas){
+    for (int  i = 0; i < _TOPE_LISTAS; i++){
+
+        // listas, cantidad de votos, % de votos
+        cout << "|" << " Lista " << listas[i].numero << setw(agregarMargen(9, listas[i].numero, 0)) << "|";
+        cout << " " << listas[i].cantidadVotos << setw(agregarMargen(18, listas[i].cantidadVotos, 0)) << "|"
+        << " " << listas[i].porcentajeVotosValidos << "%" << setw(21) << "|";
+
+        // bancas
+        for (int j = 0; j < _TOPE_BANCAS; j++){
+            if(listas[j].bancasObtenidas == 0 and j < _TOPE_LISTAS){
+                cout << " " << setw(10) << "|";
             }
-            cout<<j + 1<<") "<<listas[i].candidatos[j]<<endl;
-
+            else{
+                cout << " " << listas[i].votosPonderados[j] << setw(agregarMargen(9, listas[i].votosPonderados[j], j)) << "|";
+            }
         }
-        cout<<"______________________________________"<<endl;
-        cout<<endl;*/
 
+        // ganan
+        if(listas[i].bancasObtenidas == 0){
+            cout << " Obtuvo menos del 3%, queda DESCARTADA " << "|";
+        }else{
+            cout << " Obtiene " << listas[i].bancasObtenidas;
+
+            if(listas[i].bancasObtenidas == 1){
+                cout << " banca " << setw(23) << "|";
+            }else cout << " bancas " << setw(22) << "|";
+        }
+
+        // candidatos
+        for (int k = 0; k < listas[i].bancasObtenidas; k++){
+            if(k + 1 == listas[i].bancasObtenidas){
+                cout << " " << listas[i].candidatos[k]<<endl;
+            }else cout << " " << listas[i].candidatos[k] << ",";
+        }
+    }
+}
+
+void imprimirVotosInvalidos(tListas listas, votoInvalido & votosInvalidos){
+    for (int i = 0; i < 2; i++){
+
+        if(i == 0){
+            cout << "|" << " Voto en blanco " << "|" << " " << votosInvalidos.votoBlanco << setw(agregarMargen(18, votosInvalidos.votoBlanco, 0)) << "|";
+        }else{
+            cout << "|" << " Voto Nulo " << setw(6) << "|" << " " << votosInvalidos.votoNulo << setw(agregarMargen(18, votosInvalidos.votoNulo, 0)) << "|";
+            
+        }
+
+        // votos validos
+        cout << setw(30) << "|";
+
+        // bancas
+        for (int j = 0; j < _TOPE_BANCAS ; j++){
+            cout << " " << setw(agregarMargen(10, 0, j)) << "|";
+        }
+        // ganan
+        cout << setw(40) << "|" <<endl;
+    }
+}
+
+int agregarMargen(int margen, int numero, int banca2Digitos){
+
+    if(banca2Digitos > 8){
+        margen += 1;
+    }
+
+    if (numero < 10)
+        return margen; // si entra aca tiene 1 caracter
+    else if (numero < 100)
+        return margen - 1; // si entra aca tiene 2 caracter
+    else if (numero < 1000)
+        return margen - 2; // si entra aca tiene 3 caracter
+    
+}
+
+void imprimirRangoEdades(tListas listas, tVotos votos){
+    imprimirEncabezado();
+    int listaAnterior, i = 0, hasta18 = 0, hasta30 = 0, hasta50 = 0, masDe50 = 0;
+    bool fin;
+    voto v;
+    
+    traer(votos, v, _TOPE_VOTOS, i, fin);
+
+    while (!fin) {
+        listaAnterior = v.numero;
+        while ((!fin ) && listaAnterior == v.numero) {
+            verRangoEdad(v, listaAnterior, hasta18, hasta30, hasta50, masDe50);
+            traer(votos, v, _TOPE_VOTOS, i, fin);
+        }
+        MostrarRangosEdad(v, listaAnterior,hasta18, hasta30, hasta50, masDe50);
+    }
+}
+
+void imprimirEncabezado(){
+    cout << endl << endl;
+    cout<<"| Numero de la lista |";
+    cout<<" Cantidad de Votantes de hasta 18 años |";
+    cout<<" Cantidad de Votantes de hasta 30 años |";
+    cout<<" Cantidad de Votantes de hasta 50 años |";
+    cout<<" Cantidad de Votantes mayores a 50 años"<<endl;
+}
+
+void verRangoEdad(voto v, int listaAnterior, int & hasta18, int & hasta30, int & hasta50, int & masDe50){
+    if(listaAnterior > 0 && listaAnterior < _TOPE_LISTAS){
+        if (v.edad < 18) {
+            hasta18++;
+        } else if (v.edad < 30) {
+            hasta30++;
+        } else if (v.edad < 50) {
+            hasta50++;
+        } else {
+            masDe50++;
+        }
+    }
+
+}
+
+void MostrarRangosEdad(voto v, int listaAnterior, int & hasta18, int & hasta30, int & hasta50, int & masDe50){
+    if(listaAnterior > 0 && listaAnterior < _TOPE_LISTAS){
+        cout<<"| Lista "<<listaAnterior ;
+        cout << setw(14)<<"| " << hasta18;
+        cout << setw(agregarMargen(39, hasta18, 0))<<"| " << hasta30;
+        cout << setw(agregarMargen(39, hasta30, 0))<<"| " << hasta50;
+        cout << setw(agregarMargen(39, hasta50, 0))<<"| " << masDe50 << endl;
+        hasta18 = 0;
+        hasta30 = 0;
+        hasta50 = 0;
+        masDe50 = 0;
     }
 }
