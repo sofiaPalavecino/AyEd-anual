@@ -1,0 +1,16 @@
+
+| Listas         | Cantidad de votos | Porcentaje de votos validos | 1° banca | 2° banca | 3° banca | 4° banca | 5° banca | 6° banca | 7° banca | 8° banca | 9° banca | 10° banca | 11° banca | 12° banca | 13° banca | Bancas que ganan cada lista           | Nombre de candidatos en las bancas 
+| Lista n°4      | 45                | 19.3133%                    | 45       | 22       | 15       | 11       | 9        | 7        | 6        | 5        | 5        | 4         | 4         | 3         | 3         | Obtiene 4 bancas                      | Estella Roberts, Sean McCarthy, Loretta Parks, Blake Pratt
+| Lista n°1      | 36                | 15.4506%                    | 36       | 18       | 12       | 9        | 7        | 6        | 5        | 4        | 4        | 3         | 3         | 3         | 2         | Obtiene 3 bancas                      | Sally McGee, Marcus Holland, Mayme Reid
+| Lista n°2      | 35                | 15.0215%                    | 35       | 17       | 11       | 8        | 7        | 5        | 5        | 4        | 3        | 3         | 3         | 2         | 2         | Obtiene 2 bancas                      | Lottie Nunez, Gertrude Byrd
+| Lista n°3      | 34                | 14.5923%                    | 34       | 17       | 11       | 8        | 6        | 5        | 4        | 4        | 3        | 3         | 3         | 2         | 2         | Obtiene 2 bancas                      | Jeremy Garza, Logan McGuire
+| Lista n°5      | 30                | 12.8755%                    | 30       | 15       | 10       | 7        | 6        | 5        | 4        | 3        | 3        | 3         | 2         | 2         | 2         | Obtiene 2 bancas                      | Timothy Morales, Jeremy Woods
+| Voto en blanco | 39                |                             |          |          |          |          |          |          |          |          |          |           |           |           |           | Obtuvo menos del 3%, queda DESCARTADA |
+| Voto Nulo      | 28                |                             |          |          |          |          |          |          |          |          |          |           |           |           |           | Obtuvo menos del 3%, queda DESCARTADA |
+
+
+| Numero de la lista | Cantidad de Votantes de hasta 18 años | Cantidad de Votantes de hasta 30 años | Cantidad de Votantes de hasta 50 años | Cantidad de Votantes mayores a 50 años |
+| Lista 1            | 0                                     | 12                                    | 14                                    | 10
+| Lista 2            | 0                                     | 7                                     | 14                                    | 14
+| Lista 3            | 0                                     | 5                                     | 13                                    | 16
+| Lista 4            | 0                                     | 15                                    | 16                                    | 14
