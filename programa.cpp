@@ -67,6 +67,7 @@ int main(){
     votoInvalido votosInvalidos;
     tPondVotos cantVotDiv;
     
+    
     cargarLista(listas);
     cargarVotos(votos);
     ordenarVotos(votos, 0, _TOPE_VOTOS-1);
@@ -476,7 +477,7 @@ void imprimirEncabezado(){
 }
 
 void verRangoEdad(voto v, int listaAnterior, int & hasta18, int & hasta30, int & hasta50, int & masDe50){
-    if(listaAnterior > 0 && listaAnterior < _TOPE_LISTAS){
+    if(listaAnterior > 0 && listaAnterior <= _TOPE_LISTAS){
         if (v.edad < 18) {
             hasta18++;
         } else if (v.edad < 30) {
@@ -491,7 +492,7 @@ void verRangoEdad(voto v, int listaAnterior, int & hasta18, int & hasta30, int &
 }
 
 void MostrarRangosEdad(voto v, int listaAnterior, int & hasta18, int & hasta30, int & hasta50, int & masDe50){
-    if(listaAnterior > 0 && listaAnterior < _TOPE_LISTAS){
+    if(listaAnterior > 0 && listaAnterior <= _TOPE_LISTAS){
         cout<<"| Lista "<<listaAnterior ;
         cout << setw(14)<<"| " << hasta18;
         cout << setw(agregarMargen(39, hasta18, 0))<<"| " << hasta30;
