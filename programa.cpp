@@ -396,7 +396,7 @@ void imprimirVotosValidos(tListas listas){
 
             if(listas[i].bancasObtenidas == 1){
                 cout << " banca " << setw(23) << "|";
-            }else cout << " bancas " << setw(22) << "|";
+            }else cout << " bancas " << setw(agregarMargen(22, listas[i].bancasObtenidas, 0)) << "|";
         }
 
         // candidatos
@@ -418,12 +418,12 @@ void imprimirVotosInvalidos(tListas listas, votoInvalido & votosInvalidos){
             
         }
 
-        // votos validos
+        // % votos validos
         cout << setw(30) << "|";
 
         // bancas
         for (int j = 0; j < _TOPE_BANCAS ; j++){
-            cout << " " << setw(agregarMargen(10, 0, j)) << "|";
+            cout << setw(agregarMargen(11, 0, j)) << "|";
         }
         // ganan
         cout << setw(40) << "|" <<endl;
@@ -436,12 +436,15 @@ int agregarMargen(int margen, int numero, int banca2Digitos){
         margen += 1;
     }
 
-    if (numero < 10)
+    if (numero < 10){
         return margen; // si entra aca tiene 1 caracter
-    else if (numero < 100)
+    }
+    else if (numero < 100){
         return margen - 1; // si entra aca tiene 2 caracter
-    else if (numero < 1000)
+    }
+    else if (numero < 1000){
         return margen - 2; // si entra aca tiene 3 caracter
+    }
     
 }
 
