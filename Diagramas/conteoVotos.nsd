@@ -1,0 +1,63 @@
+1
+0
+1
+int listaAnterior, totalLista, total = 0, i = 0;
+1
+0
+1
+bool fin;
+1
+0
+1
+voto v;
+1
+0
+1
+traer(votos, v, _TOPE_VOTOS, i, fin);
+5
+0
+1
+(!fin)
+1
+0
+1
+listaAnterior = v.numero;
+1
+0
+1
+totalLista = 0;
+1
+0
+1
+cout<<"Lista "<<listaAnterior<<endl;
+5
+0
+1
+((!fin ) && listaAnterior == v.numero)
+1
+0
+1
+totalLista ++;
+1
+0
+1
+traer(votos, v, _TOPE_VOTOS, i, fin);
+11
+1
+0
+1
+cout<<"Total listas "<<totalLista<<endl;
+1
+0
+1
+total = total + totalLista;
+1
+0
+1
+clasificarVotos(votosInvalidos, listas, listaAnterior, totalLista);
+11
+1
+0
+1
+cout<<"total ingreso de las listas es "<<total<<endl;
+11
