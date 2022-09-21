@@ -10,10 +10,6 @@ bool fin;
 0
 1
 voto v;
-1
-0
-1
-traer(votos, v, _TOPE_VOTOS, i, fin);
 5
 0
 1
@@ -43,6 +39,10 @@ totalLista ++;
 1
 traer(votos, v, _TOPE_VOTOS, i, fin);
 11
+1
+0
+1
+traer(votos, v, _TOPE_VOTOS, i, fin);
 1
 0
 1
