@@ -1,0 +1,27 @@
+1
+0
+1
+int pivote;
+9
+0
+1
+(desde < hasta)
+0
+0
+0
+0
+1
+0
+1
+pivote = colocar(votos, desde, hasta);
+1
+0
+1
+ordenarVotos(votos, desde, pivote - 1);
+1
+0
+1
+ordenarVotos(votos, pivote + 1, hasta);
+11
+11
+11

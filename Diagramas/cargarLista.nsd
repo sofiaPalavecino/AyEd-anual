@@ -1,0 +1,72 @@
+1
+0
+1
+string nombreCandidato;
+1
+0
+1
+lista lista;
+1
+0
+1
+int i = 0, j = 0;
+1
+0
+1
+ifstream archivoCandidatos("candidatos.txt");
+5
+0
+1
+(getline(archivoCandidatos, nombreCandidato))
+9
+0
+1
+(i == _TOPE_CANDIDATOS)
+0
+0
+0
+0
+1
+0
+1
+lista.numero = j + 1;
+1
+0
+1
+lista.nombre = "Lista " + to_string(lista.numero);
+1
+0
+1
+lista.cantidadVotos = 0;
+1
+0
+1
+lista.porcentajeVotosValidos = 0;
+1
+0
+1
+listas[j] = lista;
+1
+0
+1
+i = 0;
+1
+0
+1
+j++;
+11
+11
+1
+0
+1
+lista.candidatos[i] = nombreCandidato;
+1
+0
+1
+i++;
+11
+1
+0
+1
+archivoCandidatos.close();
+11
