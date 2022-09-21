@@ -68,6 +68,7 @@ int main(){
     votoInvalido votosInvalidos;
     tPondVotos cantVotDiv;
     
+    
     cargarLista(listas);
     cargarVotos(votos);
     ordenarVotos(votos, 0, _TOPE_VOTOS-1);
@@ -276,16 +277,13 @@ void conteoVotos (tVotos votos, tListas & listas, votoInvalido & votosInvalidos)
     while (!fin) {
         listaAnterior = v.numero;
         totalLista = 0;
-        cout<<"Lista "<<listaAnterior<<endl;
         while ((!fin ) && listaAnterior == v.numero) {
             totalLista ++;
             traer(votos, v, _TOPE_VOTOS, i, fin);
         }
-        cout<<"Total listas "<<totalLista<<endl;
         total = total + totalLista;
         clasificarVotos(votosInvalidos, listas, listaAnterior, totalLista);
     }
-    cout<<"total ingreso de las listas es "<<total<<endl;
 
 }
 
@@ -505,19 +503,6 @@ void mostrarDatos(tListas listas, votoInvalido votosInvalidos){
             }
         }
         cout<<endl;
-        
-        /*cout<<"Candidatos: "<<endl;
-        cout<<"______________Titulares_______________"<<endl;
-        for (int j = 0; j < _TOPE_CANDIDATOS; j++)
-        {
-            if(j == 13){
-                cout<<"______________Suplentes_______________"<<endl;
-            }
-            cout<<j + 1<<") "<<listas[i].candidatos[j]<<endl;
-
-        }
-        cout<<"______________________________________"<<endl;
-        cout<<endl;*/
 
     }
 }
